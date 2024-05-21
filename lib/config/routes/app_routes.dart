@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:parkly/config/routes/route_names.dart';
+import 'package:parkly/features/authentication/view/selection_screen.dart';
 import 'package:parkly/features/authentication/view/signin_screen.dart';
 import 'package:parkly/features/authentication/view/signup_screen.dart';
+import 'package:parkly/features/authentication/view/splash_screen.dart';
 
 class AppRoutes {
 
@@ -12,9 +14,9 @@ class AppRoutes {
       case RouteNames.signUpScreen:
         return MaterialPageRoute(builder: (context) => const SignupScreen());
       case RouteNames.splashScreen:
-        return MaterialPageRoute(builder: (context) => const SignupScreen());
-      case RouteNames.signUpScreen:
-        return MaterialPageRoute(builder: (context) => const SignupScreen());
+        return MaterialPageRoute(builder: (context) => const SplashScreen());
+      case RouteNames.selectionScreen:
+        return MaterialPageRoute(builder: (context) => const SelectionScreen());
 
       default:
         return MaterialPageRoute(builder: (context) {
