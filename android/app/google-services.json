@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "383063295883",
+    "project_id": "parkly-1eaaf",
+    "storage_bucket": "parkly-1eaaf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:383063295883:android:30a2aa1d3e1be01f01d18e",
+        "android_client_info": {
+          "package_name": "com.example.parkly"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbnZIMcTtfKC37CjFH6S4DOW32oJb8Kpk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
