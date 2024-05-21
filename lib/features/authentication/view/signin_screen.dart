@@ -28,7 +28,6 @@ class _SignInScreenState extends State<SignInScreen> {
 
   @override
   Widget build(BuildContext context) {
-    print('buuild');
     return Scaffold(
       body: SafeArea(
         child: Center(
@@ -90,7 +89,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             ),
                           );
                         },),
-                        const SizedBox(height: 15.0),
+                        const SizedBox(height: 10.0),
                         GestureDetector(
                           onTap: () {
                             Navigator.pushNamed(context, RouteNames.forgotPasswordScreen);
@@ -100,7 +99,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             textAlign: TextAlign.right,
                           ),
                         ),
-                        const SizedBox(height: 15.0),
+                        const SizedBox(height: 10.0),
                         CustomButton(
                           title: 'Login',
                           titleTextColor: AppColors.whiteColor,
@@ -191,7 +190,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     ],
                   ),
                 ),
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.07),
+                SizedBox(height: MediaQuery.sizeOf(context).height * 0.1),
                 const CustomDivider(),
               ],
             ),
