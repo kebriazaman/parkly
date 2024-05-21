@@ -2,7 +2,10 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:parkly/common/custom_divider.dart';
+import 'package:parkly/config/routes/route_names.dart';
+import 'package:parkly/resources/assets/ImageAssets.dart';
 import 'package:parkly/resources/colors/appColor.dart';
 
 class SelectionScreen extends StatelessWidget {
@@ -19,8 +22,37 @@ class SelectionScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                CustomButton(title: 'Login with user',
-                titleTextColor: AppColors.primaryColor,),
+                SvgPicture.asset(ImageAssets.parklyLogo, width: 200, height: 200),
+                const Text.rich(
+                  TextSpan(
+                    text: 'Welcome to the\n',
+                    children: [
+                      TextSpan(
+                        text: 'Parkly App',
+                        style: TextStyle(color: AppColors.primaryColor),
+                      ),
+                    ],
+                  ),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 30),
+                ),
+                const SizedBox(height: 20.0),
+                CustomButton(
+                  title: 'Login with user',
+                  titleTextColor: AppColors.whiteColor,
+                  backgroundColor: AppColors.primaryColor,
+                  onTap: () {
+                    Navigator.pushNamed(context, RouteNames.signInScreen);
+                  },
+                ),
+                const SizedBox(height: 10),
+                CustomButton(
+                  title: 'Login as Admin',
+                  titleTextColor: AppColors.primaryColor,
+                  backgroundColor: AppColors.whiteColor,
+                  borderColor: AppColors.primaryColor,
+                  onTap: () {},
+                ),
                 SizedBox(height: MediaQuery.sizeOf(context).height * 0.3),
                 const CustomDivider(),
               ],
@@ -38,11 +70,13 @@ class CustomButton extends StatelessWidget {
     required this.titleTextColor,
     required this.backgroundColor,
     required this.onTap,
+    this.borderColor,
     super.key,
   });
   final String title;
   final Color backgroundColor;
   final Color titleTextColor;
+  final Color? borderColor;
   final VoidCallback onTap;
 
   @override
@@ -51,12 +85,16 @@ class CustomButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         alignment: Alignment.center,
-        decoration: const BoxDecoration(
-          color: AppColors.primaryColor,
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          border: Border.all(color: borderColor ?? AppColors.whiteColor),
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 16.0),
-          child: Text(title),
+          child: Text(
+            title,
+            style: TextStyle(color: titleTextColor),
+          ),
         ),
       ),
     );
