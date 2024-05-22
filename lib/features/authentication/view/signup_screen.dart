@@ -28,7 +28,7 @@ class SignupScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  SvgPicture.asset(ImageAssets.parklyLogo, width: 180, height: 180),
+                  SvgPicture.asset(ImageAssets.parklyLogo, width: MediaQuery.sizeOf(context).width * 0.5, height: MediaQuery.sizeOf(context).width * 0.5),
                   const Text.rich(
                     TextSpan(
                       text: 'Welcome to the\n',
@@ -45,7 +45,7 @@ class SignupScreen extends StatelessWidget {
                   const Text(
                     'Register',
                     textAlign: TextAlign.left,
-                    style: TextStyle(fontSize: 30),
+                    style: TextStyle(fontSize: 26),
                   ),
                   const SizedBox(height: 15.0),
                   Form(
@@ -109,7 +109,12 @@ class SignupScreen extends StatelessWidget {
                               isLoading: provider.isLoading,
                               onTap: () {
                                 provider.registerUser(_formKey);
-                                Navigator.pushNamed(context, RouteNames.signInScreen);
+                                if (provider.user != null) {
+                                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Registration Successful!')));
+                                  Navigator.pushNamed(context, RouteNames.signInScreen);
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(provider.errorMessage)));
+                                }
                               },
                             );
                           },
@@ -126,14 +131,14 @@ class SignupScreen extends StatelessWidget {
                           text: '\t\tSign In',
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              Navigator.pushNamed(context, RouteNames.signUpScreen);
+                              Navigator.pushNamed(context, RouteNames.signInScreen);
                             },
                         ),
                       ],
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.2),
+                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.05),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: MediaQuery.sizeOf(context).width * 0.2),
                     child: const CustomDivider(),

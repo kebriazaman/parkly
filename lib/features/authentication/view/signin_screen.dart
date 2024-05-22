@@ -38,7 +38,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  SvgPicture.asset(ImageAssets.parklyLogo, width: 180, height: 180),
+                  SvgPicture.asset(ImageAssets.parklyLogo, width: MediaQuery.sizeOf(context).width * 0.5, height: MediaQuery.sizeOf(context).width * 0.5),
                   const Text.rich(
                     TextSpan(
                       text: 'Welcome to the\n',
@@ -123,7 +123,10 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                   ),
                   const SizedBox(height: 10.0),
-                  const Text('Or', textAlign: TextAlign.center,),
+                  const Text(
+                    'Or',
+                    textAlign: TextAlign.center,
+                  ),
                   const SizedBox(height: 10.0),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
@@ -204,11 +207,12 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.15),
+                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.05),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: MediaQuery.sizeOf(context).width * 0.2),
                     child: const CustomDivider(),
-                  ),                ],
+                  ),
+                ],
               ),
             ),
           ),

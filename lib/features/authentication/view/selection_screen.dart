@@ -55,7 +55,10 @@ class SelectionScreen extends StatelessWidget {
                   onTap: () {},
                 ),
                 SizedBox(height: MediaQuery.sizeOf(context).height * 0.3),
-                const CustomDivider(),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: MediaQuery.sizeOf(context).width * 0.2),
+                  child: const CustomDivider(),
+                ),
               ],
             ),
           ),

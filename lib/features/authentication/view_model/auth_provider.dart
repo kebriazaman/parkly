@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:parkly/features/authentication/model/user_model.dart';
 
@@ -10,6 +11,7 @@ class AuthProvider extends ChangeNotifier {
   String _name = '';
   String _email = '';
   String _password = '';
+  String _errroMessage = '';
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
@@ -23,6 +25,7 @@ class AuthProvider extends ChangeNotifier {
   String get email => _email;
   String get name => _name;
   String get password => _password;
+  String get errorMessage => _errroMessage;
 
   void setLoading(bool value) {
     _isLoading = value;
@@ -51,6 +54,11 @@ class AuthProvider extends ChangeNotifier {
 
   void setPassword(String value) {
     _password = value;
+    notifyListeners();
+  }
+
+  void setErrorMessage(String value) {
+    _errroMessage = value;
     notifyListeners();
   }
 
@@ -91,6 +99,7 @@ class AuthProvider extends ChangeNotifier {
       }
     } on FirebaseAuthException catch (e) {
       print('Error registering user: ${e.code}');
+      _errroMessage = e.code;
       setLoading(false);
     }
   }
