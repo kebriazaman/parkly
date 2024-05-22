@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:parkly/common/custom_divider.dart';
 import 'package:parkly/common/decorations.dart';
@@ -22,73 +23,78 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  TextEditingController emailPhoneController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                SvgPicture.asset(ImageAssets.parklyLogo, width: 180, height: 180),
-                const Text.rich(
-                  TextSpan(
-                    text: 'Welcome to the\n',
-                    children: [
-                      TextSpan(
-                        text: 'Parkly App',
-                        style: TextStyle(color: AppColors.primaryColor),
-                      ),
-                    ],
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Container(
+            alignment: Alignment.bottomCenter,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  SvgPicture.asset(ImageAssets.parklyLogo, width: 180, height: 180),
+                  const Text.rich(
+                    TextSpan(
+                      text: 'Welcome to the\n',
+                      children: [
+                        TextSpan(
+                          text: 'Parkly App',
+                          style: TextStyle(color: AppColors.primaryColor),
+                        ),
+                      ],
+                    ),
+                    textAlign: TextAlign.center,
+                    style: TextStyle(fontSize: 30),
                   ),
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 30),
-                ),
-                const SizedBox(height: 15.0),
-                Form(
-                  key: _formKey,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  const Text(
+                    'Login',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(fontSize: 30),
+                  ),
+                  const SizedBox(height: 15.0),
+                  Form(
+                    key: _formKey,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         TextFormField(
-                          controller: emailPhoneController,
                           cursorColor: Colors.black,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
                           decoration: TextInputDecoration,
                           validator: (value) => value!.isEmpty ? 'Please enter email or phone number' : null,
                           onChanged: (value) {
-                            context.read<AuthProvider>().setNamePhoneNumber(value);
+                            context.read<AuthProvider>().setEmail(value);
                           },
                         ),
                         const SizedBox(height: 10.0),
-                        Consumer<AuthProvider>(builder: (context, provider, child) {
-                          return TextFormField(
-                            controller: passwordController,
-                            cursorColor: Colors.black,
-                            obscureText: provider.toggle,
-                            autovalidateMode: AutovalidateMode.onUserInteraction,
-                            validator: (value) => value!.length < 8 ? 'Password must be 8 characters long' : null,
-                            onChanged: (value) {
-                              context.read<AuthProvider>().setPassword(value);
-                            },
-                            decoration: TextInputDecoration.copyWith(
-                              labelText: 'Password',
-                              suffixIcon: IconButton(
-                                onPressed: () {
-                                  provider.setIconToggle(!provider.toggle);
-                                },
-                                icon: provider.toggle ? const Icon(Icons.visibility) : const Icon(Icons.visibility_off),
+                        Consumer<AuthProvider>(
+                          builder: (context, provider, child) {
+                            return TextFormField(
+                              cursorColor: Colors.black,
+                              obscureText: provider.toggle,
+                              autovalidateMode: AutovalidateMode.onUserInteraction,
+                              validator: (value) => value!.length < 8 ? 'Password must be 8 characters long' : null,
+                              onChanged: (value) {
+                                context.read<AuthProvider>().setPassword(value);
+                              },
+                              decoration: TextInputDecoration.copyWith(
+                                labelText: 'Password',
+                                suffixIcon: IconButton(
+                                  onPressed: () {
+                                    provider.setIconToggle(!provider.toggle);
+                                  },
+                                  icon: provider.toggle ? const Icon(Icons.visibility) : const Icon(Icons.visibility_off),
+                                ),
                               ),
-                            ),
-                          );
-                        },),
+                            );
+                          },
+                        ),
                         const SizedBox(height: 10.0),
                         GestureDetector(
                           onTap: () {
@@ -100,99 +106,110 @@ class _SignInScreenState extends State<SignInScreen> {
                           ),
                         ),
                         const SizedBox(height: 10.0),
-                        CustomButton(
-                          title: 'Login',
-                          titleTextColor: AppColors.whiteColor,
-                          backgroundColor: AppColors.primaryColor,
-                          onTap: () {
-                            context.read<AuthProvider>().loginUser(_formKey);
+                        Consumer<AuthProvider>(
+                          builder: (context, provider, child) {
+                            return CustomButton(
+                              title: 'Login',
+                              titleTextColor: AppColors.whiteColor,
+                              backgroundColor: AppColors.primaryColor,
+                              isLoading: provider.isLoading,
+                              onTap: () {
+                                provider.loginUser(_formKey);
+                              },
+                            );
                           },
                         ),
                       ],
                     ),
                   ),
-                ),
-                const SizedBox(height: 10.0),
-                const Text('Or'),
-                const SizedBox(height: 10.0),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(color: AppColors.primaryColor),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 8.0),
-                                child: SvgPicture.asset(ImageAssets.googleIcon),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(right: 8.0),
-                                child: CustomButton(
-                                  title: 'Google',
-                                  titleTextColor: AppColors.primaryColor,
-                                  backgroundColor: AppColors.whiteColor,
-                                  onTap: () {},
+                  const SizedBox(height: 10.0),
+                  const Text('Or', textAlign: TextAlign.center,),
+                  const SizedBox(height: 10.0),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(color: AppColors.primaryColor),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: SvgPicture.asset(ImageAssets.googleIcon),
                                 ),
-                              ),
-                            ],
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 8.0),
+                                  child: CustomButton(
+                                    title: 'Google',
+                                    titleTextColor: AppColors.primaryColor,
+                                    backgroundColor: AppColors.whiteColor,
+                                    onTap: () {},
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                      const SizedBox(width: 20.0),
-                      Expanded(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.black),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 16.0),
-                                child: SvgPicture.asset(ImageAssets.facebookIcon, color: Colors.black,
-                                height: 25,),
-                              ),
-                              const SizedBox(width: 10.0),
-                              Padding(
-                                padding: const EdgeInsets.only(right: 16.0),
-                                child: CustomButton(
-                                  title: 'Facebook',
-                                  titleTextColor: Colors.black,
-                                  backgroundColor: AppColors.whiteColor,
-                                  onTap: () {},
+                        const SizedBox(width: 20.0),
+                        Expanded(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.black),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 16.0),
+                                  child: SvgPicture.asset(
+                                    ImageAssets.facebookIcon,
+                                    color: Colors.black,
+                                    height: 25,
+                                  ),
                                 ),
-                              ),
-                            ],
+                                const SizedBox(width: 10.0),
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 16.0),
+                                  child: CustomButton(
+                                    title: 'Facebook',
+                                    titleTextColor: Colors.black,
+                                    backgroundColor: AppColors.whiteColor,
+                                    onTap: () {},
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                const SizedBox(height: 20.0),
-                Text.rich(
-                  TextSpan(
-                    text: 'Don\'t have an account?',
-                    children: [
-                      TextSpan(
-                        text: '\t\tSignup',
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            Navigator.pushNamed(context, RouteNames.signUpScreen);
-                          },
-                      ),
-                    ],
+                  const SizedBox(height: 20.0),
+                  Text.rich(
+                    TextSpan(
+                      text: 'Don\'t have an account?',
+                      children: [
+                        TextSpan(
+                          text: '\t\tSignup',
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              Navigator.pushNamed(context, RouteNames.signUpScreen);
+                            },
+                        ),
+                      ],
+                    ),
+                    textAlign: TextAlign.center,
                   ),
-                ),
-                SizedBox(height: MediaQuery.sizeOf(context).height * 0.1),
-                const CustomDivider(),
-              ],
+                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.15),
+                  Padding(
+                    padding: EdgeInsets.symmetric(horizontal: MediaQuery.sizeOf(context).width * 0.2),
+                    child: const CustomDivider(),
+                  ),                ],
+              ),
             ),
           ),
         ),

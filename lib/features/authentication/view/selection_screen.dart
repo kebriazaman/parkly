@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:parkly/common/custom_divider.dart';
 import 'package:parkly/config/routes/route_names.dart';
@@ -71,12 +72,14 @@ class CustomButton extends StatelessWidget {
     required this.backgroundColor,
     required this.onTap,
     this.borderColor,
+    this.isLoading = false,
     super.key,
   });
   final String title;
   final Color backgroundColor;
   final Color titleTextColor;
   final Color? borderColor;
+  final bool isLoading;
   final VoidCallback onTap;
 
   @override
@@ -92,7 +95,12 @@ class CustomButton extends StatelessWidget {
         ),
         child: Padding(
           padding: const EdgeInsets.symmetric(vertical: 12.0),
-          child: Text(
+          child: isLoading ? const Center(
+            child: SpinKitFadingCircle(
+              size: 20,
+              color: AppColors.whiteColor,
+            ),
+          ): Text(
             title,
             style: TextStyle(color: titleTextColor),
           ),

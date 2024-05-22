@@ -12,7 +12,7 @@ class AppRoutes {
       case RouteNames.signInScreen:
         return MaterialPageRoute(builder: (context) => const SignInScreen());
       case RouteNames.signUpScreen:
-        return MaterialPageRoute(builder: (context) => const SignupScreen());
+        return MaterialPageRoute(builder: (context) => SignupScreen());
       case RouteNames.splashScreen:
         return MaterialPageRoute(builder: (context) => const SplashScreen());
       case RouteNames.selectionScreen:
