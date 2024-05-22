@@ -113,7 +113,7 @@ class SignupScreen extends StatelessWidget {
                                   ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Registration Successful!')));
                                   Navigator.pushNamed(context, RouteNames.signInScreen);
                                 } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(provider.errorMessage)));
+                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(provider.message)));
                                 }
                               },
                             );

@@ -11,7 +11,14 @@ class AuthProvider extends ChangeNotifier {
   String _name = '';
   String _email = '';
   String _password = '';
-  String _errroMessage = '';
+  String _message = '';
+  final List<String> _otpDigits = List.generate(6, (index) => '');
+
+
+
+  String getOTP() {
+    return _otpDigits.join('');
+  }
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firebaseFirestore = FirebaseFirestore.instance;
@@ -25,7 +32,10 @@ class AuthProvider extends ChangeNotifier {
   String get email => _email;
   String get name => _name;
   String get password => _password;
-  String get errorMessage => _errroMessage;
+  String get message => _message;
+
+  List<String> get otpDigits => _otpDigits;
+
 
   void setLoading(bool value) {
     _isLoading = value;
@@ -57,12 +67,18 @@ class AuthProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setErrorMessage(String value) {
-    _errroMessage = value;
+  void setMessage(String value) {
+    _message = value;
     notifyListeners();
   }
 
-  void loginUser(GlobalKey<FormState> key) async {
+  void updateOTPDigit(int index, String digit) {
+    _otpDigits[index] = digit;
+    notifyListeners();
+  }
+
+
+  Future<void> loginUser(GlobalKey<FormState> key) async {
     setLoading(true);
     if (key.currentState!.validate()) {
       try {
@@ -71,11 +87,13 @@ class AuthProvider extends ChangeNotifier {
           password: password.trim(),
         );
         _user = userCredential.user;
+        _message = 'Successfully signed in.';
         notifyListeners();
         setLoading(false);
       } on FirebaseAuthException catch (e) {
         setLoading(false);
         print('Error singin in: ${e.code}');
+        _message = e.code;
       }
     } else {
       setLoading(false);
@@ -90,7 +108,6 @@ class AuthProvider extends ChangeNotifier {
         User? user = userCredential.user;
         if (user != null) {
           UserModel userModel = UserModel(uid: user.uid, email: user.email, name: user.displayName);
-
           await _firebaseFirestore.collection('users').doc(user.uid).set(userModel.toJson());
           _user = user;
           notifyListeners();
@@ -99,9 +116,29 @@ class AuthProvider extends ChangeNotifier {
       }
     } on FirebaseAuthException catch (e) {
       print('Error registering user: ${e.code}');
-      _errroMessage = e.code;
+      _message = e.code;
       setLoading(false);
     }
   }
+
+  Future<void> verifyEmail(GlobalKey<FormState> key, String email) async {
+    if (key.currentState!.validate()) {
+      setLoading(true);
+      try {
+        await _auth.sendPasswordResetEmail(email: email);
+        _message = 'We have sent you email. Please check and provide otp';
+        setLoading(false);
+      } on FirebaseAuthException catch (e) {
+        _message = e.code;
+        print(e.code);
+        setLoading(false);
+      }
+    }
+
+  }
+
+
+  Future<void> logoutUser() async => await _auth.signOut();
+
 
 }

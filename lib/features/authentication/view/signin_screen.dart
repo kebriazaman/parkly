@@ -38,7 +38,8 @@ class _SignInScreenState extends State<SignInScreen> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  SvgPicture.asset(ImageAssets.parklyLogo, width: MediaQuery.sizeOf(context).width * 0.5, height: MediaQuery.sizeOf(context).width * 0.5),
+                  SvgPicture.asset(ImageAssets.parklyLogo,
+                      width: MediaQuery.sizeOf(context).width * 0.5, height: MediaQuery.sizeOf(context).width * 0.5),
                   const Text.rich(
                     TextSpan(
                       text: 'Welcome to the\n',
@@ -113,8 +114,14 @@ class _SignInScreenState extends State<SignInScreen> {
                               titleTextColor: AppColors.whiteColor,
                               backgroundColor: AppColors.primaryColor,
                               isLoading: provider.isLoading,
-                              onTap: () {
-                                provider.loginUser(_formKey);
+                              onTap: () async {
+                                await provider.loginUser(_formKey);
+                                if (provider.user != null) {
+                                  Navigator.pushNamed(context, RouteNames.mainMenuScreen);
+                                }
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(provider.message)),
+                                );
                               },
                             );
                           },

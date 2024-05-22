@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:parkly/config/routes/route_names.dart';
+import 'package:parkly/features/authentication/view/forgot_password_screen.dart';
 import 'package:parkly/features/authentication/view/selection_screen.dart';
 import 'package:parkly/features/authentication/view/signin_screen.dart';
 import 'package:parkly/features/authentication/view/signup_screen.dart';
 import 'package:parkly/features/authentication/view/splash_screen.dart';
+import 'package:parkly/features/main_menu/view/main_menu_screen.dart';
 
 class AppRoutes {
 
@@ -17,6 +19,10 @@ class AppRoutes {
         return MaterialPageRoute(builder: (context) => const SplashScreen());
       case RouteNames.selectionScreen:
         return MaterialPageRoute(builder: (context) => const SelectionScreen());
+      case RouteNames.forgotPasswordScreen:
+        return MaterialPageRoute(builder: (context) => const ForgotPasswordScreen());
+     case RouteNames.mainMenuScreen:
+        return MaterialPageRoute(builder: (context) => const MainMenuScreen());
 
       default:
         return MaterialPageRoute(builder: (context) {
