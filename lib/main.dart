@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:parkly/config/routes/app_routes.dart';
 import 'package:parkly/config/routes/route_names.dart';
 import 'package:parkly/features/authentication/view_model/auth_provider.dart';
+import 'package:parkly/features/main_menu/view_model/admin_provider.dart';
 import 'package:parkly/firebase_options.dart';
 import 'package:provider/provider.dart';
 
@@ -21,8 +22,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<AuthProvider>(
-      create: (context) => AuthProvider(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => AuthProvider()),
+        ChangeNotifierProvider(create: (context) => AdminProvider()),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(

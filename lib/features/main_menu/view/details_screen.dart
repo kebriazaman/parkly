@@ -1,8 +1,15 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:parkly/features/authentication/view/selection_screen.dart';
+import 'package:parkly/features/authentication/view_model/auth_provider.dart';
+import 'package:parkly/features/main_menu/view_model/admin_provider.dart';
 import 'package:parkly/resources/colors/appColor.dart';
+import 'package:provider/provider.dart';
 
 import '../../../common/decorations.dart';
+import '../../../config/routes/route_names.dart';
 import '../../../resources/assets/ImageAssets.dart';
 
 class DetailsScreen extends StatelessWidget {
@@ -33,27 +40,33 @@ class DetailsScreen extends StatelessWidget {
                 children: [
                   const Text('Add Parking Pictures'),
                   const SizedBox(height: 10.0),
-                  Wrap(
-                    direction: Axis.horizontal,
-                    children: List.generate(
-                      5,
-                      (index) {
-                        return Padding(
-                          padding: const EdgeInsets.only(right: 8.0, bottom: 8.0),
-                          child: SizedBox(
-                            width: 90,
-                            height: 95,
-                            child: ClipRRect(
-                              borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                              child: Image.asset(
-                                ImageAssets.demoImage,
-                                fit: BoxFit.fill,
+                  Consumer<AdminProvider>(
+                    builder: (context, provider, child) {
+                      return provider.urls.isEmpty ?
+                      const Text('Please select image from the gallery by tapping Add Button')
+                      : provider.gettingImages ?
+                      SpinKitFadingCircle(color: AppColors.primaryColor,)
+                      :
+                      Wrap(
+                        direction: Axis.horizontal,
+                        children: List.generate(
+                          provider.urls.length,
+                          (index) {
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 8.0, bottom: 8.0),
+                              child: SizedBox(
+                                width: 90,
+                                height: 95,
+                                child: ClipRRect(
+                                  borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                                  child: Image.network(provider.urls[index], fit: BoxFit.fill,),
+                                ),
                               ),
-                            ),
-                          ),
-                        );
-                      },
-                    ),
+                            );
+                          },
+                        ),
+                      );
+                    },
                   ),
                   const SizedBox(height: 20.0),
                   TextFormField(
@@ -67,7 +80,9 @@ class DetailsScreen extends StatelessWidget {
                       border: const OutlineInputBorder(borderSide: BorderSide(color: AppColors.primaryColor)),
                     ),
                     validator: (value) => value!.isEmpty ? 'Please enter valid address' : null,
-                    onChanged: (value) {},
+                    onChanged: (value) {
+                      context.read<AdminProvider>().setLocation(value);
+                    },
                   ),
                   const SizedBox(height: 20.0),
                   TextFormField(
@@ -81,14 +96,26 @@ class DetailsScreen extends StatelessWidget {
                       border: const OutlineInputBorder(borderSide: BorderSide(color: AppColors.primaryColor)),
                     ),
                     validator: (value) => value!.isEmpty ? 'Please enter correct phone number' : null,
-                    onChanged: (value) {},
+                    onChanged: (value) {
+                      context.read<AdminProvider>().setPhoneNuber(value);
+                    },
                   ),
                   const SizedBox(height: 20.0),
-                  CustomButton(
-                    title: 'Save',
-                    titleTextColor: AppColors.whiteColor,
-                    backgroundColor: AppColors.primaryColor,
-                    onTap: () {},
+                  Consumer<AdminProvider>(
+                    builder: (context, provider, child) {
+                      return CustomButton(
+                        title: 'Register',
+                        titleTextColor: AppColors.whiteColor,
+                        backgroundColor: AppColors.primaryColor,
+                        isLoading: provider.isLoading,
+                        onTap: () async {
+                          await provider.saveData(_formKey, context.read<AuthProvider>().user?.uid);
+                          if (provider.message.isNotEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(provider.message.toString())));
+                          }
+                        },
+                      );
+                    },
                   ),
                 ],
               ),
@@ -98,7 +125,7 @@ class DetailsScreen extends StatelessWidget {
       ),
       floatingActionButton: GestureDetector(
         onTap: () {
-          print('image selected');
+          context.read<AdminProvider>().getImagesFromGallery();
         },
         child: Container(
           decoration: const BoxDecoration(color: AppColors.primaryColor, borderRadius: BorderRadius.all(Radius.circular(12.0))),
