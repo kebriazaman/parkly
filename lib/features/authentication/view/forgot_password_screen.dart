@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:parkly/config/routes/route_names.dart';
 import 'package:parkly/features/authentication/view/selection_screen.dart';
@@ -64,15 +65,18 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         Consumer<AuthProvider>(
                           builder: (context, provider, child) {
                             return CustomButton(
-                              title: 'Next',
+                              title: 'Send',
                               titleTextColor: AppColors.whiteColor,
                               backgroundColor: AppColors.primaryColor,
                               isLoading: provider.isLoading,
                               onTap: () async {
+
                                 await provider.verifyEmail(_formKey,provider.email);
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(provider.message)),
-                                );
+
+                                // ScaffoldMessenger.of(context).showSnackBar(
+                                //   SnackBar(content: Text(provider.message)),
+                                // );
+
                                 // Utils.showMessageDialog(context, 'message', Icons.add, Colors.black);
 
                                 // showDialog(
@@ -156,60 +160,59 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                 //   },
                                 // );
 
-                                // showDialog(
-                                //   context: context,
-                                //   builder: (context) {
-                                //     return AlertDialog(
-                                //       surfaceTintColor: AppColors.whiteColor,
-                                //       shape: const BeveledRectangleBorder(),
-                                //       content: SizedBox(
-                                //         height: screenHeight * 0.5,
-                                //         width: screenWidth,
-                                //         child: SingleChildScrollView(
-                                //           child: Padding(
-                                //             padding: const EdgeInsets.symmetric(vertical: 16.0),
-                                //             child: Column(
-                                //               children: [
-                                //                 const Text('Enter your 6 digit code'),
-                                //                 SizedBox(height: screenHeight * 0.09),
-                                //                 SvgPicture.asset(ImageAssets.verifiedIcon),
-                                //                 SizedBox(height: screenHeight * 0.09),
-                                //                 const Text(
-                                //                   'Verified!',
-                                //                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
-                                //                 ),
-                                //                 const SizedBox(height: 10.0),
-                                //                 const Text(
-                                //                   'Hurrah!!  You have successfully verified the account.',
-                                //                   style: TextStyle(
-                                //                     fontWeight: FontWeight.w400,
-                                //                     fontSize: 14,
-                                //                     color: AppColors.lightGreyColor,
-                                //                   ),
-                                //                   textAlign: TextAlign.center,
-                                //                 ),
-                                //                 const SizedBox(height: 10.0),
-                                //                 Consumer<AuthProvider>(
-                                //                   builder: (context, provider, child) {
-                                //                     return CustomButton(
-                                //                       title: 'Done',
-                                //                       titleTextColor: AppColors.whiteColor,
-                                //                       backgroundColor: AppColors.primaryColor,
-                                //                       isLoading: provider.isLoading,
-                                //                       onTap: () {
-                                //                         Navigator.pushNamed(context, RouteNames.signInScreen);
-                                //                       },
-                                //                     );
-                                //                   },
-                                //                 ),
-                                //               ],
-                                //             ),
-                                //           ),
-                                //         ),
-                                //       ),
-                                //     );
-                                //   },
-                                // );
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      surfaceTintColor: AppColors.whiteColor,
+                                      shape: const BeveledRectangleBorder(),
+                                      content: SizedBox(
+                                        height: screenHeight * 0.55,
+                                        width: screenWidth,
+                                        child: SingleChildScrollView(
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(vertical: 16.0),
+                                            child: Column(
+                                              children: [
+                                                const Text('Enter your 6 digit code'),
+                                                SizedBox(height: screenHeight * 0.09),
+                                                SvgPicture.asset(ImageAssets.emailIcon),
+                                                const Text(
+                                                  'Email sent!',
+                                                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
+                                                ),
+                                                const SizedBox(height: 10.0),
+                                                Text(
+                                                  provider.message.toString(),
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.w400,
+                                                    fontSize: 14,
+                                                    color: AppColors.lightGreyColor,
+                                                  ),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                                SizedBox(height: MediaQuery.sizeOf(context).height * 0.05),
+                                                Consumer<AuthProvider>(
+                                                  builder: (context, provider, child) {
+                                                    return CustomButton(
+                                                      title: 'Done',
+                                                      titleTextColor: AppColors.whiteColor,
+                                                      backgroundColor: AppColors.primaryColor,
+                                                      isLoading: provider.isLoading,
+                                                      onTap: () {
+                                                        Navigator.pushNamed(context, RouteNames.signInScreen);
+                                                      },
+                                                    );
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
                               },
                             );
                           },

@@ -67,8 +67,10 @@ class _SignInScreenState extends State<SignInScreen> {
                         TextFormField(
                           cursorColor: Colors.black,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
+                          textInputAction: TextInputAction.next,
+                          keyboardType: TextInputType.emailAddress,
                           decoration: TextInputDecoration,
-                          validator: (value) => value!.isEmpty ? 'Please enter email or phone number' : null,
+                          validator: (value) => value!.isEmpty ? 'Please enter valid email' : null,
                           onChanged: (value) {
                             context.read<AuthProvider>().setEmail(value);
                           },
@@ -79,6 +81,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             return TextFormField(
                               cursorColor: Colors.black,
                               obscureText: provider.toggle,
+                              textInputAction: TextInputAction.done,
                               autovalidateMode: AutovalidateMode.onUserInteraction,
                               validator: (value) => value!.length < 8 ? 'Password must be 8 characters long' : null,
                               onChanged: (value) {

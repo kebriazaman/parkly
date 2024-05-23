@@ -52,7 +52,9 @@ class SelectionScreen extends StatelessWidget {
                   titleTextColor: AppColors.primaryColor,
                   backgroundColor: AppColors.whiteColor,
                   borderColor: AppColors.primaryColor,
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, RouteNames.adminSignInScreen);
+                  },
                 ),
                 SizedBox(height: MediaQuery.sizeOf(context).height * 0.3),
                 Padding(

@@ -7,6 +7,5 @@ const TextInputDecoration = InputDecoration(
   border: OutlineInputBorder(),
   focusedBorder: OutlineInputBorder(),
   enabledBorder: OutlineInputBorder(),
-
   contentPadding: EdgeInsets.symmetric(horizontal: 12.0),
 );

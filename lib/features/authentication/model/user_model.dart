@@ -1,9 +1,10 @@
 class UserModel {
   final String uid;
+  final bool? isAdmin;
   final String? email;
   final String? name;
 
-  UserModel({required this.uid, required this.email, this.name});
+  UserModel({required this.uid, required this.email, this.name, this.isAdmin});
 
   // Factory constructor to create a UserModel instance from JSON
   factory UserModel.fromJson(Map<String, dynamic> json) {
@@ -20,6 +21,7 @@ class UserModel {
       'uid': uid,
       'email': email,
       'name': name,
+      'isAdmin': isAdmin,
     };
   }
 }

@@ -18,7 +18,7 @@ class MainMenuScreen extends StatelessWidget {
       ),
       body: SafeArea(
         child: Center(
-          child: Text('Main Menu'),
+          child: Text('Welcome User'),
         ),
       ),
     );

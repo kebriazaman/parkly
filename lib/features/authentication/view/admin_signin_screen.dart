@@ -1,20 +1,36 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:parkly/common/custom_divider.dart';
+import 'package:parkly/common/decorations.dart';
+import 'package:parkly/config/routes/app_routes.dart';
+import 'package:parkly/config/routes/route_names.dart';
 import 'package:parkly/features/authentication/view/selection_screen.dart';
 import 'package:provider/provider.dart';
 
-import '../../../common/custom_divider.dart';
-import '../../../common/decorations.dart';
-import '../../../config/routes/route_names.dart';
 import '../../../resources/assets/ImageAssets.dart';
 import '../../../resources/colors/appColor.dart';
 import '../view_model/auth_provider.dart';
 
-class SignupScreen extends StatelessWidget {
-  SignupScreen({super.key});
+class AdminSignInScreen extends StatefulWidget {
+  const AdminSignInScreen({super.key});
+
+  @override
+  State<AdminSignInScreen> createState() => _AdminSignInScreenState();
+}
+
+class _AdminSignInScreenState extends State<AdminSignInScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    Provider.of<AuthProvider>(context, listen: false).clearData();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,9 +60,9 @@ class SignupScreen extends StatelessWidget {
                     style: TextStyle(fontSize: 30),
                   ),
                   const Text(
-                    'Register',
+                    'Login',
                     textAlign: TextAlign.left,
-                    style: TextStyle(fontSize: 26),
+                    style: TextStyle(fontSize: 30),
                   ),
                   const SizedBox(height: 15.0),
                   Form(
@@ -56,22 +72,11 @@ class SignupScreen extends StatelessWidget {
                       children: [
                         TextFormField(
                           cursorColor: Colors.black,
-                          textInputAction: TextInputAction.next,
                           autovalidateMode: AutovalidateMode.onUserInteraction,
-                          decoration: TextInputDecoration.copyWith(labelText: 'Name'),
-                          validator: (value) => value!.isEmpty ? 'Please enter correct name' : null,
-                          onChanged: (value) {
-                            context.read<AuthProvider>().setName(value);
-                          },
-                        ),
-                        const SizedBox(height: 10.0),
-                        TextFormField(
-                          cursorColor: Colors.black,
                           textInputAction: TextInputAction.next,
                           keyboardType: TextInputType.emailAddress,
-                          autovalidateMode: AutovalidateMode.onUserInteraction,
-                          decoration: TextInputDecoration.copyWith(labelText: 'Email'),
-                          validator: (value) => value!.isEmpty ? 'Please enter email or phone number' : null,
+                          decoration: TextInputDecoration,
+                          validator: (value) => value!.isEmpty ? 'Please enter valid email' : null,
                           onChanged: (value) {
                             context.read<AuthProvider>().setEmail(value);
                           },
@@ -101,39 +106,33 @@ class SignupScreen extends StatelessWidget {
                           },
                         ),
                         const SizedBox(height: 10.0),
-                        Consumer<AuthProvider>(
-                          builder: (context, provider, child) {
-                            return Container(
-                              alignment: Alignment.centerRight,
-                              child: Switch(
-                                value: provider.isAdmin,
-                                activeTrackColor: Colors.white,
-                                trackOutlineColor: MaterialStateProperty.all(Colors.black),
-                                thumbColor: MaterialStateProperty.all(AppColors.primaryColor),
-                                inactiveThumbColor: Colors.black,
-                                onChanged: (value) {
-                                  provider.setCheckboxValue(value);
-                                },
-                              ),
-                            );
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pushNamed(context, RouteNames.forgotPasswordScreen);
                           },
+                          child: const Text(
+                            'Forgot Password?',
+                            textAlign: TextAlign.right,
+                          ),
                         ),
                         const SizedBox(height: 10.0),
                         Consumer<AuthProvider>(
                           builder: (context, provider, child) {
                             return CustomButton(
-                              title: 'Register',
+                              title: 'Login',
                               titleTextColor: AppColors.whiteColor,
                               backgroundColor: AppColors.primaryColor,
                               isLoading: provider.isLoading,
                               onTap: () async {
-                                await provider.registerUser(_formKey);
-                                if (provider.user != null) {
-                                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Registration Successful!')));
-                                  Navigator.pushNamed(context, RouteNames.signInScreen);
+                                await provider.loginAsAdmin(_formKey);
+                                if (provider.isAdmin) {
+                                  Navigator.pushNamed(context, RouteNames.adminSignInScreen);
                                 } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(provider.message)));
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(provider.message)),
+                                  );
                                 }
+
                               },
                             );
                           },
@@ -141,16 +140,85 @@ class SignupScreen extends StatelessWidget {
                       ],
                     ),
                   ),
+                  const SizedBox(height: 10.0),
+                  const Text(
+                    'Or',
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 10.0),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(color: AppColors.primaryColor),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: SvgPicture.asset(ImageAssets.googleIcon),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 8.0),
+                                  child: CustomButton(
+                                    title: 'Google',
+                                    titleTextColor: AppColors.primaryColor,
+                                    backgroundColor: AppColors.whiteColor,
+                                    onTap: () {},
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 20.0),
+                        Expanded(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              border: Border.all(color: Colors.black),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 16.0),
+                                  child: SvgPicture.asset(
+                                    ImageAssets.facebookIcon,
+                                    color: Colors.black,
+                                    height: 25,
+                                  ),
+                                ),
+                                const SizedBox(width: 10.0),
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 16.0),
+                                  child: CustomButton(
+                                    title: 'Facebook',
+                                    titleTextColor: Colors.black,
+                                    backgroundColor: AppColors.whiteColor,
+                                    onTap: () {},
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                   const SizedBox(height: 20.0),
                   Text.rich(
                     TextSpan(
-                      text: 'Already have an account?',
+                      text: 'Don\'t have an account?',
                       children: [
                         TextSpan(
-                          text: '\t\tSign In',
+                          text: '\t\tSignup',
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              Navigator.pushNamed(context, RouteNames.signInScreen);
+                              Navigator.pushNamed(context, RouteNames.signUpScreen);
                             },
                         ),
                       ],

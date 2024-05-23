@@ -8,6 +8,7 @@ class AuthProvider extends ChangeNotifier {
   bool _isVisible = false;
   bool _toggle = false;
   bool _isLoading = false;
+  bool _isAdmin = false;
   String _name = '';
   String _email = '';
   String _password = '';
@@ -28,6 +29,7 @@ class AuthProvider extends ChangeNotifier {
 
   bool get isVisible => _isVisible;
   bool get isLoading => _isLoading;
+  bool get isAdmin => _isAdmin;
   bool get toggle => _toggle;
   String get email => _email;
   String get name => _name;
@@ -35,6 +37,12 @@ class AuthProvider extends ChangeNotifier {
   String get message => _message;
 
   List<String> get otpDigits => _otpDigits;
+
+
+  void setCheckboxValue(bool value) {
+    _isAdmin = value;
+    notifyListeners();
+  }
 
 
   void setLoading(bool value) {
@@ -100,19 +108,65 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
-  void registerUser(GlobalKey<FormState> key) async {
+
+
+  Future<void> loginAsAdmin(GlobalKey<FormState> key) async {
+    setLoading(true);
+    if (key.currentState!.validate()) {
+      try {
+        UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+          email: _email.trim(),
+          password: password.trim(),
+        );
+
+        DocumentSnapshot userDoc = await _firebaseFirestore.collection('users').doc(userCredential.user!.uid).get();
+        if (userDoc.exists) {
+          bool isAdmin = (userDoc.data() as Map<String, dynamic>?)?['isAdmin'] ?? false;
+          if (isAdmin) {
+            _isAdmin = isAdmin;
+            print('logged in as Admin');
+          } else {
+            _isAdmin = isAdmin;
+            _message = 'User data not found';
+          }
+        }
+        _user = userCredential.user;
+        _message = 'Successfully signed in.';
+        notifyListeners();
+        setLoading(false);
+      } on FirebaseAuthException catch (e) {
+        setLoading(false);
+        print('Error singin in: ${e.code}');
+        _message = e.code;
+      }
+    } else {
+      setLoading(false);
+    }
+  }
+
+  Future<void> registerUser(GlobalKey<FormState> key) async {
     setLoading(true);
     try {
       if (key.currentState!.validate()) {
         UserCredential userCredential = await _auth.createUserWithEmailAndPassword(email: email, password: password);
         User? user = userCredential.user;
         if (user != null) {
-          UserModel userModel = UserModel(uid: user.uid, email: user.email, name: user.displayName);
-          await _firebaseFirestore.collection('users').doc(user.uid).set(userModel.toJson());
-          _user = user;
-          notifyListeners();
-          setLoading(false);
+
+          var queryUser = await _firebaseFirestore.collection('users')
+                                                  .where('uid', isEqualTo: user.uid)
+                                                  .get();
+
+
+          if (queryUser.docs.isEmpty) {
+            UserModel userModel = UserModel(uid: user.uid, email: user.email, name: _name, isAdmin: isAdmin);
+            await _firebaseFirestore.collection('users').doc(user.uid).set(userModel.toJson());
+            _user = user;
+            notifyListeners();
+            setLoading(false);
+          }
+
         }
+        setLoading(false);
       }
     } on FirebaseAuthException catch (e) {
       print('Error registering user: ${e.code}');
@@ -135,6 +189,11 @@ class AuthProvider extends ChangeNotifier {
       }
     }
 
+  }
+
+  void clearData() {
+    _email = '';
+    _password = '';
   }
 
 
