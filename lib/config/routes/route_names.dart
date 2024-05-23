@@ -7,4 +7,5 @@ class RouteNames{
   static const String forgotPasswordScreen = '/forgotPasswordScreen';
   static const String mainMenuScreen = '/mainMenuScreen';
   static const String adminScreen = '/adminScreen';
+  static const String detailsScreen = '/detailsScreen';
 }

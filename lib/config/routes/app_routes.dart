@@ -7,6 +7,7 @@ import 'package:parkly/features/authentication/view/signin_screen.dart';
 import 'package:parkly/features/authentication/view/signup_screen.dart';
 import 'package:parkly/features/authentication/view/splash_screen.dart';
 import 'package:parkly/features/main_menu/view/admin_screen.dart';
+import 'package:parkly/features/main_menu/view/details_screen.dart';
 import 'package:parkly/features/main_menu/view/main_menu_screen.dart';
 
 class AppRoutes {
@@ -25,8 +26,10 @@ class AppRoutes {
         return MaterialPageRoute(builder: (context) => const AdminSignInScreen());
       case RouteNames.adminScreen:
         return MaterialPageRoute(builder: (context) => const AdminScreen());
-        case RouteNames.forgotPasswordScreen:
+      case RouteNames.forgotPasswordScreen:
         return MaterialPageRoute(builder: (context) => const ForgotPasswordScreen());
+      case RouteNames.detailsScreen:
+        return MaterialPageRoute(builder: (context) => DetailsScreen());
      case RouteNames.mainMenuScreen:
         return MaterialPageRoute(builder: (context) => const MainMenuScreen());
 
