@@ -94,6 +94,9 @@ class AuthProvider extends ChangeNotifier {
           email: _email.trim(),
           password: password.trim(),
         );
+
+
+
         _user = userCredential.user;
         _message = 'Successfully signed in.';
         notifyListeners();
@@ -124,14 +127,17 @@ class AuthProvider extends ChangeNotifier {
           bool isAdmin = (userDoc.data() as Map<String, dynamic>?)?['isAdmin'] ?? false;
           if (isAdmin) {
             _isAdmin = isAdmin;
-            print('logged in as Admin');
+            _user = userCredential.user;
+            _message = 'Successfully signed in.';
           } else {
             _isAdmin = isAdmin;
-            _message = 'User data not found';
+            _message = 'Successfully signed in.';
+            _user = userCredential.user;
           }
+        } else {
+          _message = 'User data not found';
         }
-        _user = userCredential.user;
-        _message = 'Successfully signed in.';
+
         notifyListeners();
         setLoading(false);
       } on FirebaseAuthException catch (e) {
@@ -155,21 +161,19 @@ class AuthProvider extends ChangeNotifier {
           var queryUser = await _firebaseFirestore.collection('users')
                                                   .where('uid', isEqualTo: user.uid)
                                                   .get();
-
-
           if (queryUser.docs.isEmpty) {
             UserModel userModel = UserModel(uid: user.uid, email: user.email, name: _name, isAdmin: isAdmin);
             await _firebaseFirestore.collection('users').doc(user.uid).set(userModel.toJson());
             _user = user;
             notifyListeners();
             setLoading(false);
+
           }
 
         }
         setLoading(false);
       }
     } on FirebaseAuthException catch (e) {
-      print('Error registering user: ${e.code}');
       _message = e.code;
       setLoading(false);
     }
@@ -195,6 +199,8 @@ class AuthProvider extends ChangeNotifier {
     _email = '';
     _password = '';
   }
+
+
 
 
   Future<void> logoutUser() async => await _auth.signOut();

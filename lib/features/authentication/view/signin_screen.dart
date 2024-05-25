@@ -118,13 +118,20 @@ class _SignInScreenState extends State<SignInScreen> {
                               backgroundColor: AppColors.primaryColor,
                               isLoading: provider.isLoading,
                               onTap: () async {
-                                await provider.loginUser(_formKey);
-                                if (provider.user != null) {
-                                  Navigator.pushNamed(context, RouteNames.mainMenuScreen);
+                                await provider.loginAsAdmin(_formKey);
+                                print(provider.isAdmin);
+                                if (provider.isAdmin) {
+                                  Navigator.pushReplacementNamed(context, RouteNames.adminScreen);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(provider.message)),
+                                  );
+                                } else {
+                                  Navigator.pushReplacementNamed(context, RouteNames.mainMenuScreen);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(provider.message)),
+                                  );
                                 }
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(provider.message)),
-                                );
+
                               },
                             );
                           },

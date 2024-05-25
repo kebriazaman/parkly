@@ -60,10 +60,12 @@ class AdminProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setPhoneNuber(String v) {
+  void setPhonenumber(String v) {
     _phoneNumber = v;
     notifyListeners();
   }
+
+
 
   void getImagesFromGallery() async {
     urls.clear();
@@ -80,6 +82,8 @@ class AdminProvider extends ChangeNotifier {
     }
     setGettingImagesValue(false);
   }
+
+
 
   Future<String> uploadImageToFirebase(XFile image) async {
     Reference storageReference = FirebaseStorage.instance.ref().child('images/${DateTime.now().millisecondsSinceEpoch}_${image.name}');
@@ -108,7 +112,7 @@ class AdminProvider extends ChangeNotifier {
         try {
 
           await FirebaseFirestore.instance.collection('parkings').add({
-            'user_id': userId ?? DateTime.now().millisecondsSinceEpoch,
+            'user_id': userId,
             'location': _location,
             'lat': _lat,
             'lng': _lng,
@@ -130,9 +134,42 @@ class AdminProvider extends ChangeNotifier {
 
     }
 
+  }
 
 
+  List<Map<String, dynamic>> _bookedCars = [];
 
+  List<Map<String, dynamic>> get bookedCars => _bookedCars;
+
+  void setBookedCars(List<Map<String, dynamic>> cars) {
+    _bookedCars = cars;
+    notifyListeners();
+  }
+
+  Future<void> fetchBookedParking(String userId) async {
+    try {
+      QuerySnapshot snapshot = await FirebaseFirestore.instance
+          .collection('parkings')
+          .where('user_id', isEqualTo: userId)
+          .get();
+
+
+      List<Map<String, dynamic>> cars = [];
+
+      for (var doc in snapshot.docs) {
+        QuerySnapshot carSnapshot = await doc.reference.collection('cars').get();
+        for (var carDoc in carSnapshot.docs) {
+          cars.add(carDoc.data() as Map<String, dynamic>);
+        }
+      }
+
+      print(cars[0]['vehicle_name']);
+      setBookedCars(cars);
+      notifyListeners();
+    } catch (e) {
+      print(e);
+    }
 
   }
+
 }

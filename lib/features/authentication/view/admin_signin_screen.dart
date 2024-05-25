@@ -126,7 +126,10 @@ class _AdminSignInScreenState extends State<AdminSignInScreen> {
                               onTap: () async {
                                 await provider.loginAsAdmin(_formKey);
                                 if (provider.isAdmin) {
-                                  Navigator.pushNamed(context, RouteNames.adminSignInScreen);
+                                  Navigator.pushNamed(context, RouteNames.adminScreen);
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(content: Text(provider.message)),
+                                  );
                                 } else {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     SnackBar(content: Text(provider.message)),

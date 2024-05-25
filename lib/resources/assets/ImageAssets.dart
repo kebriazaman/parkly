@@ -5,4 +5,6 @@ class ImageAssets {
   static const String emailIcon = 'assets/icons/email_icon.svg';
   static const String verifiedIcon = 'assets/icons/verified_icon.svg';
   static const String demoImage = 'assets/icons/demoimage.png';
+  static const String carIcon = 'assets/icons/car_icon.svg';
+  static const String locationIcon = 'assets/icons/location_icon.svg';
 }

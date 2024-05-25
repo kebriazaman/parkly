@@ -12,8 +12,8 @@ import '../../../common/decorations.dart';
 import '../../../config/routes/route_names.dart';
 import '../../../resources/assets/ImageAssets.dart';
 
-class DetailsScreen extends StatelessWidget {
-  DetailsScreen({super.key});
+class AddParkingDetailsScreen extends StatelessWidget {
+  AddParkingDetailsScreen({super.key});
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class DetailsScreen extends StatelessWidget {
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
-          onPressed: () {},
+          onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
           'Add Parking Details',
@@ -45,7 +45,7 @@ class DetailsScreen extends StatelessWidget {
                       return provider.urls.isEmpty ?
                       const Text('Please select image from the gallery by tapping Add Button')
                       : provider.gettingImages ?
-                      SpinKitFadingCircle(color: AppColors.primaryColor,)
+                      const SpinKitFadingCircle(color: AppColors.primaryColor,)
                       :
                       Wrap(
                         direction: Axis.horizontal,
@@ -72,7 +72,9 @@ class DetailsScreen extends StatelessWidget {
                   TextFormField(
                     cursorColor: Colors.black,
                     autovalidateMode: AutovalidateMode.onUserInteraction,
+
                     textInputAction: TextInputAction.next,
+
                     decoration: TextInputDecoration.copyWith(
                       labelText: 'Location',
                       focusedBorder: const OutlineInputBorder(borderSide: BorderSide(color: AppColors.primaryColor)),
@@ -97,7 +99,7 @@ class DetailsScreen extends StatelessWidget {
                     ),
                     validator: (value) => value!.isEmpty ? 'Please enter correct phone number' : null,
                     onChanged: (value) {
-                      context.read<AdminProvider>().setPhoneNuber(value);
+                      context.read<AdminProvider>().setPhonenumber(value);
                     },
                   ),
                   const SizedBox(height: 20.0),
@@ -127,9 +129,15 @@ class DetailsScreen extends StatelessWidget {
         onTap: () {
           context.read<AdminProvider>().getImagesFromGallery();
         },
-        child: Container(
-          decoration: const BoxDecoration(color: AppColors.primaryColor, borderRadius: BorderRadius.all(Radius.circular(12.0))),
-          child: const Icon(Icons.add, size: 50),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Container(
+            decoration: const BoxDecoration(color: AppColors.primaryColor, borderRadius: BorderRadius.all(Radius.circular(12.0))),
+            child: const Padding(
+              padding: EdgeInsets.all(8.0),
+              child: Icon(Icons.add, size: 50),
+            ),
+          ),
         ),
       ),
     );

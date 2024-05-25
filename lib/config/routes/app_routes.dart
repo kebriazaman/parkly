@@ -6,9 +6,11 @@ import 'package:parkly/features/authentication/view/selection_screen.dart';
 import 'package:parkly/features/authentication/view/signin_screen.dart';
 import 'package:parkly/features/authentication/view/signup_screen.dart';
 import 'package:parkly/features/authentication/view/splash_screen.dart';
+import 'package:parkly/features/book_parking/view/book_parking_screen.dart';
 import 'package:parkly/features/main_menu/view/admin_screen.dart';
-import 'package:parkly/features/main_menu/view/details_screen.dart';
-import 'package:parkly/features/main_menu/view/main_menu_screen.dart';
+import 'package:parkly/features/main_menu/view/add_parking_screen.dart';
+import 'package:parkly/features/book_parking/view/main_menu_screen.dart';
+import 'package:parkly/features/main_menu/view/parking_details_screen.dart';
 
 class AppRoutes {
 
@@ -25,13 +27,17 @@ class AppRoutes {
       case RouteNames.adminSignInScreen:
         return MaterialPageRoute(builder: (context) => const AdminSignInScreen());
       case RouteNames.adminScreen:
-        return MaterialPageRoute(builder: (context) => const AdminScreen());
+        return MaterialPageRoute(builder: (context) =>  AdminScreen());
       case RouteNames.forgotPasswordScreen:
         return MaterialPageRoute(builder: (context) => const ForgotPasswordScreen());
-      case RouteNames.detailsScreen:
-        return MaterialPageRoute(builder: (context) => DetailsScreen());
+      case RouteNames.addParkingDetailsScreen:
+        return MaterialPageRoute(builder: (context) => AddParkingDetailsScreen());
+      case RouteNames.parkingDetailsScreen:
+        return MaterialPageRoute(builder: (context) => const ParkingDetailsScreen());
+      case RouteNames.bookParkingScreen:
+        return MaterialPageRoute(builder: (context) => BookParking());
      case RouteNames.mainMenuScreen:
-        return MaterialPageRoute(builder: (context) => const MainMenuScreen());
+        return MaterialPageRoute(builder: (context) => MainMenuScreen());
 
       default:
         return MaterialPageRoute(builder: (context) {
