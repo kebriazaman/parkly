@@ -91,18 +91,22 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
                       ),
                     ),
                   ),
-                  const Column(
+                  Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         'Welcome to the Parkly',
                         style: TextStyle(fontSize: 18.0),
                       ),
-                      Text(
-                        'Kebria',
-                        style: TextStyle(fontSize: 18.0),
+                      Consumer<AuthProvider>(
+                        builder: (context, provider, child) {
+                          return Text(
+                            provider.userName ?? 'hello',
+                            style: const TextStyle(fontSize: 18.0),
+                          );
+                        },
                       ),
-                      SizedBox(height: 10.0),
+                      const SizedBox(height: 10.0),
                     ],
                   ),
                 ],

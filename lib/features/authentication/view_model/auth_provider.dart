@@ -13,6 +13,7 @@ class AuthProvider extends ChangeNotifier {
   String _email = '';
   String _password = '';
   String _message = '';
+  String? _userName;
   final List<String> _otpDigits = List.generate(6, (index) => '');
 
 
@@ -27,6 +28,7 @@ class AuthProvider extends ChangeNotifier {
 
   User? get user => _user;
 
+  String? get userName => _userName;
   bool get isVisible => _isVisible;
   bool get isLoading => _isLoading;
   bool get isAdmin => _isAdmin;
@@ -38,6 +40,18 @@ class AuthProvider extends ChangeNotifier {
 
   List<String> get otpDigits => _otpDigits;
 
+  String extractUsername(String email) {
+    if (email.contains('@')) {
+      print(email.split('@'[0]));
+      return email.split('@')[0];
+    }
+    return '';
+  }
+
+  void setUserName(String v) {
+    _userName = v;
+    notifyListeners();
+  }
 
   void setCheckboxValue(bool value) {
     _isAdmin = value;
@@ -95,9 +109,9 @@ class AuthProvider extends ChangeNotifier {
           password: password.trim(),
         );
 
-
-
         _user = userCredential.user;
+
+        notifyListeners();
         _message = 'Successfully signed in.';
         notifyListeners();
         setLoading(false);
@@ -117,11 +131,14 @@ class AuthProvider extends ChangeNotifier {
     setLoading(true);
     if (key.currentState!.validate()) {
       try {
+
         UserCredential userCredential = await _auth.signInWithEmailAndPassword(
           email: _email.trim(),
           password: password.trim(),
         );
 
+        _user = userCredential.user;
+        _userName = extractUsername(_user!.email.toString());
         DocumentSnapshot userDoc = await _firebaseFirestore.collection('users').doc(userCredential.user!.uid).get();
         if (userDoc.exists) {
           bool isAdmin = (userDoc.data() as Map<String, dynamic>?)?['isAdmin'] ?? false;
@@ -142,7 +159,9 @@ class AuthProvider extends ChangeNotifier {
         setLoading(false);
       } on FirebaseAuthException catch (e) {
         setLoading(false);
+        print(_user);
         print('Error singin in: ${e.code}');
+
         _message = e.code;
       }
     } else {

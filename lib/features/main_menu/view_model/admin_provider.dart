@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 
 class AdminProvider extends ChangeNotifier {
   bool _isLoading = false;
+  bool _isCarsLoading = false;
   bool _gettingImages = false;
   String _location = '';
   String _message = '';
@@ -25,10 +26,16 @@ class AdminProvider extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
   bool get gettingImages => _gettingImages;
+  bool get isCarsLoading => _isCarsLoading;
 
   final ImagePicker _picker = ImagePicker();
   List<XFile> selectedImages = <XFile>[];
   List<String> urls = <String>[];
+
+  void setCarsLoading(bool v) {
+    _isCarsLoading = v;
+    notifyListeners();
+  }
 
   void setGettingImagesValue(bool v) {
     _gettingImages = v;
@@ -138,11 +145,26 @@ class AdminProvider extends ChangeNotifier {
 
 
   List<Map<String, dynamic>> _bookedCars = [];
+  List<Map<String, dynamic>> _bookedCarsCopyList = [];
 
   List<Map<String, dynamic>> get bookedCars => _bookedCars;
+  List<Map<String, dynamic>> get bookedCarsCopyList => _bookedCarsCopyList;
+
+  void filterCars(String value) {
+    setCarsLoading(true);
+    if (value.isEmpty) {
+      _bookedCarsCopyList = List.from(_bookedCars);
+    } else {
+      _bookedCarsCopyList = _bookedCars.where((car) => car['vehicle_name'].toString().toLowerCase()
+      .contains(value.toLowerCase())).toList();
+    }
+    setCarsLoading(false);
+    notifyListeners();
+  }
 
   void setBookedCars(List<Map<String, dynamic>> cars) {
     _bookedCars = cars;
+    _bookedCarsCopyList = List.from(cars);
     notifyListeners();
   }
 
@@ -163,7 +185,6 @@ class AdminProvider extends ChangeNotifier {
         }
       }
 
-      print(cars[0]['vehicle_name']);
       setBookedCars(cars);
       notifyListeners();
     } catch (e) {

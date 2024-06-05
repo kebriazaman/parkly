@@ -15,7 +15,7 @@ import '../../../common/decorations.dart';
 import '../../authentication/view_model/auth_provider.dart';
 
 class AdminScreen extends StatefulWidget {
-  AdminScreen({super.key});
+  const AdminScreen({super.key});
 
   @override
   State<AdminScreen> createState() => _AdminScreenState();
@@ -24,7 +24,6 @@ class AdminScreen extends StatefulWidget {
 class _AdminScreenState extends State<AdminScreen> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-
   @override
   void initState() {
     super.initState();
@@ -32,6 +31,7 @@ class _AdminScreenState extends State<AdminScreen> {
       await Provider.of<AdminProvider>(context, listen: false).fetchBookedParking(context.read<AuthProvider>().user!.uid);
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,22 +79,21 @@ class _AdminScreenState extends State<AdminScreen> {
                             color: AppColors.whiteColor,
                             onPressed: () {
                               _scaffoldKey.currentState?.openDrawer();
-                              print(_scaffoldKey.currentState!.hasDrawer);
                             },
                             icon: const Icon(Icons.menu),
                           ),
                         ),
                         const SizedBox(width: 20.0),
-                        const Column(
+                        Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
+                            const Text(
                               'Welcome',
                               style: TextStyle(fontSize: 14.0),
                             ),
                             Text(
-                              'Kebria',
-                              style: TextStyle(fontSize: 14.0),
+                              context.read<AuthProvider>().userName.toString(),
+                              style: const TextStyle(fontSize: 14.0),
                             )
                           ],
                         ),
@@ -131,7 +130,9 @@ class _AdminScreenState extends State<AdminScreen> {
                       const OutlineInputBorder(borderRadius: BorderRadius.zero, borderSide: BorderSide(color: AppColors.whiteColor)),
                   suffixIcon: const Icon(Icons.search),
                 ),
-                onChanged: (value) {},
+                onChanged: (value) {
+                  context.read<AdminProvider>().filterCars(value);
+                },
               ),
               const SizedBox(height: 20.0),
               const Text(
@@ -167,71 +168,82 @@ class _AdminScreenState extends State<AdminScreen> {
 
               Consumer<AdminProvider>(
                 builder: (context, provider, child) {
-                  return Expanded(
-                    child: ListView.builder(
-                      itemCount: provider.bookedCars.length,
-                      shrinkWrap: true,
-                      itemBuilder: (context, index) {
-                        final car = provider.bookedCars[index];
-                        return Card(
-                          surfaceTintColor: AppColors.whiteColor,
-                          color: AppColors.whiteColor,
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.zero,
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    SizedBox(
-                                      width: 80,
-                                      height: 95,
-                                      child: ClipRRect(
-                                        borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                                        child: Image.network(car['urls'][0]),
+                  return provider.isCarsLoading
+                      ? const Center(child: CircularProgressIndicator())
+                      : Expanded(
+                          child: ListView.builder(
+                            itemCount: provider.bookedCarsCopyList.length,
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              final car = provider.bookedCarsCopyList[index];
+                              return Card(
+                                surfaceTintColor: AppColors.whiteColor,
+                                color: AppColors.whiteColor,
+                                shape: const RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.zero,
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 80,
+                                            height: 95,
+                                            child: ClipRRect(
+                                              borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                                              child: car['urs'] == null ?
+                                              Image.network('https://via.placeholder.com/200x300')
+                                                  : Image.network(
+                                                car['urls'][0],
+                                                errorBuilder: (context, error, stackTrace) {
+                                                  return Image.network('https://via.placeholder.com/200x300');
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(width: 5.0),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              const Text('Vehicle Name', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                                              Text(car['vehicle_name'] ?? '----',
+                                                  style: const TextStyle(
+                                                      fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.primaryColor)),
+                                              const SizedBox(height: 10.0),
+                                              const Text('Total Hours', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                                              Text(car['total_hours'] ?? '---',
+                                                  style: const TextStyle(
+                                                      fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.primaryColor)),
+                                            ],
+                                          ),
+                                        ],
                                       ),
-
-                                    ),
-                                    const SizedBox(width: 5.0),
-                                    Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        const Text('Vehicle Name', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                                        Text(car['vehicle_name'],
-                                            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.primaryColor)),
-                                        const SizedBox(height: 10.0),
-                                        const Text('Total Hours', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                                        Text(car['total_hours'],
-                                            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.primaryColor)),
-                                      ],
-                                    ),
-                                  ],
+                                      Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          const Text('From', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                                          Text(car['from_date'] ?? '---',
+                                              style: const TextStyle(
+                                                  fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.primaryColor)),
+                                          const SizedBox(height: 10.0),
+                                          const Text('To', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+                                          Text(car['to_date'] ?? '---',
+                                              style: const TextStyle(
+                                                  fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.primaryColor)),
+                                          const SizedBox(height: 10.0),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const Text('From', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                                    Text(car['from_date'],
-                                        style:  const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.primaryColor)),
-                                    const SizedBox(height: 10.0),
-                                    const Text('To', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-                                    Text(car['to_date'],
-                                        style:  const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.primaryColor)),
-                                    const SizedBox(height: 10.0),
-
-                                  ],
-                                ),
-                              ],
-                            ),
+                              );
+                            },
                           ),
                         );
-                      },
-                    ),
-                  );
                 },
               ),
             ],

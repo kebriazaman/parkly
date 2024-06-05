@@ -135,7 +135,7 @@ class AddParkingDetailsScreen extends StatelessWidget {
             decoration: const BoxDecoration(color: AppColors.primaryColor, borderRadius: BorderRadius.all(Radius.circular(12.0))),
             child: const Padding(
               padding: EdgeInsets.all(8.0),
-              child: Icon(Icons.add, size: 50),
+              child: Icon(Icons.add, size: 30),
             ),
           ),
         ),

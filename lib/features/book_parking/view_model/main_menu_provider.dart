@@ -197,15 +197,18 @@ class MainMenuProvider extends ChangeNotifier {
         'urls': urls,
       }).then((value) {
         setIsLoading(false);
-        setMessageValue('Space aloted successfully');
+        _message = 'Space booked';
+        notifyListeners();
         setDoneValue(true);
+
       }).onError((error, stackTrace) {
         setIsLoading(false);
+        _message = 'Error booking parking';
+        notifyListeners();
         setMessageValue('Error booking parking');
         setDoneValue(false);
       });
     }
   }
-
 
 }

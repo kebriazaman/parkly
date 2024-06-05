@@ -27,7 +27,7 @@ class _AdminSignInScreenState extends State<AdminSignInScreen> {
 
   @override
   void dispose() {
-    Provider.of<AuthProvider>(context, listen: false).clearData();
+    // Provider.of<AuthProvider>(context, listen: false).clearData();
     super.dispose();
   }
 
@@ -143,75 +143,75 @@ class _AdminSignInScreenState extends State<AdminSignInScreen> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 10.0),
-                  const Text(
-                    'Or',
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 10.0),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Row(
-                      children: [
-                        Expanded(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(color: AppColors.primaryColor),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 8.0),
-                                  child: SvgPicture.asset(ImageAssets.googleIcon),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 8.0),
-                                  child: CustomButton(
-                                    title: 'Google',
-                                    titleTextColor: AppColors.primaryColor,
-                                    backgroundColor: AppColors.whiteColor,
-                                    onTap: () {},
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 20.0),
-                        Expanded(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(color: Colors.black),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 16.0),
-                                  child: SvgPicture.asset(
-                                    ImageAssets.facebookIcon,
-                                    color: Colors.black,
-                                    height: 25,
-                                  ),
-                                ),
-                                const SizedBox(width: 10.0),
-                                Padding(
-                                  padding: const EdgeInsets.only(right: 16.0),
-                                  child: CustomButton(
-                                    title: 'Facebook',
-                                    titleTextColor: Colors.black,
-                                    backgroundColor: AppColors.whiteColor,
-                                    onTap: () {},
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                  // const SizedBox(height: 10.0),
+                  // const Text(
+                  //   'Or',
+                  //   textAlign: TextAlign.center,
+                  // ),
+                  // const SizedBox(height: 10.0),
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  //   child: Row(
+                  //     children: [
+                  //       Expanded(
+                  //         child: Container(
+                  //           decoration: BoxDecoration(
+                  //             border: Border.all(color: AppColors.primaryColor),
+                  //           ),
+                  //           child: Row(
+                  //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //             children: [
+                  //               Padding(
+                  //                 padding: const EdgeInsets.only(left: 8.0),
+                  //                 child: SvgPicture.asset(ImageAssets.googleIcon),
+                  //               ),
+                  //               Padding(
+                  //                 padding: const EdgeInsets.only(right: 8.0),
+                  //                 child: CustomButton(
+                  //                   title: 'Google',
+                  //                   titleTextColor: AppColors.primaryColor,
+                  //                   backgroundColor: AppColors.whiteColor,
+                  //                   onTap: () {},
+                  //                 ),
+                  //               ),
+                  //             ],
+                  //           ),
+                  //         ),
+                  //       ),
+                  //       const SizedBox(width: 20.0),
+                  //       Expanded(
+                  //         child: Container(
+                  //           decoration: BoxDecoration(
+                  //             border: Border.all(color: Colors.black),
+                  //           ),
+                  //           child: Row(
+                  //             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  //             children: [
+                  //               Padding(
+                  //                 padding: const EdgeInsets.only(left: 16.0),
+                  //                 child: SvgPicture.asset(
+                  //                   ImageAssets.facebookIcon,
+                  //                   color: Colors.black,
+                  //                   height: 25,
+                  //                 ),
+                  //               ),
+                  //               const SizedBox(width: 10.0),
+                  //               Padding(
+                  //                 padding: const EdgeInsets.only(right: 16.0),
+                  //                 child: CustomButton(
+                  //                   title: 'Facebook',
+                  //                   titleTextColor: Colors.black,
+                  //                   backgroundColor: AppColors.whiteColor,
+                  //                   onTap: () {},
+                  //                 ),
+                  //               ),
+                  //             ],
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
                   const SizedBox(height: 20.0),
                   Text.rich(
                     TextSpan(
@@ -228,7 +228,7 @@ class _AdminSignInScreenState extends State<AdminSignInScreen> {
                     ),
                     textAlign: TextAlign.center,
                   ),
-                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.05),
+                  SizedBox(height: MediaQuery.sizeOf(context).height * 0.2),
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: MediaQuery.sizeOf(context).width * 0.2),
                     child: const CustomDivider(),

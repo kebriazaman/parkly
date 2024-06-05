@@ -7,8 +7,8 @@
         <string>$(PRODUCT_NAME)photos description.</string>
         <key>NSCameraUsageDescription</key>
         <string>$(PRODUCT_NAME) would like to access camera!.</string>
-<key>GMSApiKey</key>
-<string>AIzaSyD-TR7HOruDGiDz8ayZYdKd5a5kY0T7dnw</string>
+    <key>GMSApiKey</key>
+    <string>AIzaSyD-TR7HOruDGiDz8ayZYdKd5a5kY0T7dnw</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>

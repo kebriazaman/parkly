@@ -4,7 +4,6 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:parkly/config/routes/route_names.dart';
 import 'package:parkly/features/authentication/view/selection_screen.dart';
-import 'package:parkly/utils/utils.dart';
 import 'package:provider/provider.dart';
 
 import '../../../common/custom_divider.dart';
